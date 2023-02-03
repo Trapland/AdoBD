@@ -36,7 +36,7 @@ namespace AdoBD
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            try
+            try // try to connect to our db
             {
                 _connection.Open();
                 StatusConnection.Content = "Connected";
@@ -49,8 +49,8 @@ namespace AdoBD
                 MessageBox.Show(ex.Message);
                 this.Close();
             }
-            ShowMonitor();
-            ShowInfo();
+            ShowMonitor(); // show count of objects in all tables
+            ShowInfo(); // show objects of all tables
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -61,28 +61,6 @@ namespace AdoBD
             }
         }
 
-        private void InstallDepartments_Click(object sender, RoutedEventArgs e)
-        {
-            //Команда - инструмент для выполнения sql запросов
-            SqlCommand cmd = new SqlCommand();
-            // Главные параметры команды
-            cmd.Connection = _connection;  //подключение(открытое)
-            cmd.CommandText = @"CREATE TABLE Departments (
-                            	Id			UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
-	                            Name		NVARCHAR(50) NOT NULL
-                                 )";      // sql запрос
-            //Выполнение команды
-            try
-            {
-                cmd.ExecuteNonQuery();      // NonQuery - без возврата результата
-                MessageBox.Show("Create OK");
-            }
-            catch (SqlException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            cmd.Dispose();                  // команда - неконтролированный ресурс, требует утилизации
-        }
         /// <summary>
         /// Отображает на мониторе количество отделов(департаментов) в БД
         /// </summary>
@@ -92,12 +70,15 @@ namespace AdoBD
             ShowMonitorProducts();
             ShowMonitorManagers();
         }
+
         private void ShowInfo()
         {
             ShowDepartments();
             ShowProducts();
             ShowManagers();
         }
+
+        //show count of objects in tables
         private void ShowMonitorDepartments()
         {
             using SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM Departments", _connection);
@@ -170,6 +151,77 @@ namespace AdoBD
 
         }
 
+        //Install tables
+        private void InstallDepartments_Click(object sender, RoutedEventArgs e)
+        {
+            //Команда - инструмент для выполнения sql запросов
+            SqlCommand cmd = new SqlCommand();
+            // Главные параметры команды
+            cmd.Connection = _connection;  //подключение(открытое)
+            cmd.CommandText = @"CREATE TABLE Departments (
+                            	Id			UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+	                            Name		NVARCHAR(50) NOT NULL
+                                 )";      // sql запрос
+            //Выполнение команды
+            try
+            {
+                cmd.ExecuteNonQuery();      // NonQuery - без возврата результата
+                MessageBox.Show("Create OK");
+            }
+            catch (SqlException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            cmd.Dispose();                  // команда - неконтролированный ресурс, требует утилизации
+        }
+
+        private void InstallProducts_Click(object sender, RoutedEventArgs e)
+        {
+            //Команда - инструмент для выполнения sql запросов
+            SqlCommand cmd = new SqlCommand(@"CREATE TABLE Products (
+                    	Id			UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+                    	Name		NVARCHAR(50) NOT NULL,
+                    	Price		FLOAT  NOT NULL
+                    )", _connection);
+            //Выполнение команды
+            try
+            {
+                cmd.ExecuteNonQuery();      // NonQuery - без возврата результата
+                MessageBox.Show("Create OK");
+            }
+            catch (SqlException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            cmd.Dispose();                  // команда - неконтролированный ресурс, требует утилизации
+        }
+
+        private void InstallManagers_Click(object sender, RoutedEventArgs e)
+        {
+            //Команда - инструмент для выполнения sql запросов
+            SqlCommand cmd = new SqlCommand(@"CREATE TABLE Managers (
+                	Id			UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+                	Surname		NVARCHAR(50) NOT NULL,
+                	Name		NVARCHAR(50) NOT NULL,
+                	Secname		NVARCHAR(50) NOT NULL,
+                	Id_main_dep UNIQUEIDENTIFIER NOT NULL REFERENCES Departments( Id ),
+                	Id_sec_dep	UNIQUEIDENTIFIER REFERENCES Departments( Id ),
+                	Id_chief	UNIQUEIDENTIFIER
+                )", _connection);
+            //Выполнение команды
+            try
+            {
+                cmd.ExecuteNonQuery();      // NonQuery - без возврата результата
+                MessageBox.Show("Create OK");
+            }
+            catch (SqlException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            cmd.Dispose();                  // команда - неконтролированный ресурс, требует утилизации
+        }
+
+        //Fill tables
         private void FillDepartments_Click(object sender, RoutedEventArgs e)
         {
             //Команда - инструмент для выполнения sql запросов
@@ -197,27 +249,6 @@ namespace AdoBD
                 MessageBox.Show(ex.Message);
             }
             ShowMonitorDepartments();
-            cmd.Dispose();                  // команда - неконтролированный ресурс, требует утилизации
-        }
-
-        private void InstallProducts_Click(object sender, RoutedEventArgs e)
-        {
-            //Команда - инструмент для выполнения sql запросов
-            SqlCommand cmd = new SqlCommand(@"CREATE TABLE Products (
-                    	Id			UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
-                    	Name		NVARCHAR(50) NOT NULL,
-                    	Price		FLOAT  NOT NULL
-                    )", _connection);
-            //Выполнение команды
-            try
-            {
-                cmd.ExecuteNonQuery();      // NonQuery - без возврата результата
-                MessageBox.Show("Create OK");
-            }
-            catch (SqlException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
             cmd.Dispose();                  // команда - неконтролированный ресурс, требует утилизации
         }
 
@@ -261,37 +292,12 @@ namespace AdoBD
             cmd.Dispose();                  // команда - неконтролированный ресурс, требует утилизации
         }
 
-        private void InstallManagers_Click(object sender, RoutedEventArgs e)
-        {
-            //Команда - инструмент для выполнения sql запросов
-            SqlCommand cmd = new SqlCommand(@"CREATE TABLE Managers (
-                	Id			UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
-                	Surname		NVARCHAR(50) NOT NULL,
-                	Name		NVARCHAR(50) NOT NULL,
-                	Secname		NVARCHAR(50) NOT NULL,
-                	Id_main_dep UNIQUEIDENTIFIER NOT NULL REFERENCES Departments( Id ),
-                	Id_sec_dep	UNIQUEIDENTIFIER REFERENCES Departments( Id ),
-                	Id_chief	UNIQUEIDENTIFIER
-                )", _connection);
-            //Выполнение команды
-            try
-            {
-                cmd.ExecuteNonQuery();      // NonQuery - без возврата результата
-                MessageBox.Show("Create OK");
-            }
-            catch (SqlException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            cmd.Dispose();                  // команда - неконтролированный ресурс, требует утилизации
-        }
-
         private void FillManagers_Click(object sender, RoutedEventArgs e)
         {
             //Команда - инструмент для выполнения sql запросов
             StreamReader sr = new StreamReader("SQL\\FillManagers.txt");
 
-            SqlCommand cmd = new SqlCommand(sr.ReadToEnd(), _connection);
+            SqlCommand cmd = new SqlCommand(sr.ReadToEnd(), _connection); //read long sql command from file
             sr.Close();
 
             //Выполнение команды
@@ -310,6 +316,7 @@ namespace AdoBD
 
         }
 
+        //Delete tables
         private void DropDepartments_Click(object sender, RoutedEventArgs e)
         {
             using SqlCommand cmd = new("DROP TABLE Departments", _connection);
@@ -352,18 +359,19 @@ namespace AdoBD
             }
         }
 
+        //show info about diff tables
         private void ShowDepartments()
         {
             using SqlCommand cmd = new("SELECT * FROM Departments", _connection);
             try
             {
-                SqlDataReader reader= cmd.ExecuteReader();
+                SqlDataReader reader= cmd.ExecuteReader(); //initialize reader with sql command
                 string str = "";
                 while (reader.Read())
                 {
-                    str += reader.GetGuid(0).ToString().Substring(0,4) + "..." + reader.GetGuid(0).ToString().Substring(32) + " " + reader.GetString(1) + "\n";
+                    str += reader.GetGuid(0).ToString().Substring(0,4) + "..." + reader.GetGuid(0).ToString().Substring(32) + " " + reader.GetString(1) + "\n";//Make short id + depart name
                 }
-                ViewDepartments.Text = str;
+                ViewDepartments.Text = str; // Add our message to output
                 reader.Close();
             }
             catch (SqlException ex)
@@ -377,13 +385,13 @@ namespace AdoBD
             using SqlCommand cmd = new("SELECT * FROM Products", _connection);
             try
             {
-                SqlDataReader reader = cmd.ExecuteReader();
+                SqlDataReader reader = cmd.ExecuteReader(); //initialize reader with sql command
                 string str = "";
                 while (reader.Read())
                 {
-                    str += reader.GetGuid(0).ToString().Substring(0, 4) + "..." + reader.GetGuid(0).ToString().Substring(32) + " " + reader.GetString(1) + " " + reader.GetDouble(2).ToString() + "\n";
+                    str += reader.GetGuid(0).ToString().Substring(0, 4) + "..." + reader.GetGuid(0).ToString().Substring(32) + " " + reader.GetString(1) + " " + reader.GetDouble(2).ToString() + "\n"; //Make short id + prod name + price
                 }
-                ViewProducts.Text = str;
+                ViewProducts.Text = str; // Add our message to output
                 reader.Close();
             }
             catch (SqlException ex)
@@ -397,13 +405,13 @@ namespace AdoBD
             using SqlCommand cmd = new("SELECT * FROM Managers", _connection);
             try
             {
-                SqlDataReader reader = cmd.ExecuteReader();
+                SqlDataReader reader = cmd.ExecuteReader(); //initialize reader with sql command
                 string str = "";
                 while (reader.Read())
                 {
-                    str += reader.GetGuid(0).ToString().Substring(0, 4) + "..." + reader.GetGuid(0).ToString().Substring(32) + " " + reader.GetString(1) + " " + reader.GetString(2) + " " + reader.GetString(3) + "\n";
+                    str += reader.GetGuid(0).ToString().Substring(0, 4) + "..." + reader.GetGuid(0).ToString().Substring(32) + " " + reader.GetString(1) + " " + reader.GetString(2) + " " + reader.GetString(3) + "\n"; //Make short id + Full name
                 }
-                ViewManagers.Text = str;
+                ViewManagers.Text = str; // Add our message to output
                 reader.Close();
             }
             catch (SqlException ex)
