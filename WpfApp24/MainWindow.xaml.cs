@@ -31,7 +31,7 @@ namespace AdoBD
             // Создание объекта не открывает подключения
             _connection = new SqlConnection();
             // Главный параметр подключения - строка подключения
-            _connection.ConnectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\boyar\source\repos\WpfApp24\WpfApp24\Database1.mdf;Integrated Security=True";
+            _connection.ConnectionString = App.ConnectionString;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

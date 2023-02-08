@@ -6,12 +6,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace WpfApp24
+namespace AdoBD
 {
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
     public partial class App : Application
     {
+        public static readonly String ConnectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\boyar\source\repos\WpfApp24\WpfApp24\Database1.mdf;Integrated Security=True";
     }
 }
