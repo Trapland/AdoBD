@@ -39,7 +39,7 @@
         </StackPanel>
         <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1">
             <Label Content="Продукты" HorizontalAlignment="Center" FontSize="22" FontWeight="DemiBold"></Label>
-            <ListView ItemsSource="{Binding Products}">
+            <ListView MaxHeight="175" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Visible" ItemsSource="{Binding Products}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Id"
@@ -51,11 +51,18 @@
 
                     </GridView>
                 </ListView.View>
+                <ListView.Resources>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <EventSetter Event="MouseDoubleClick" Handler="Products_MouseDoubleClick">
+
+                        </EventSetter>
+                    </Style>
+                </ListView.Resources>
             </ListView>
         </StackPanel>
         <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0">
-            <Label Content="Менеджеры" HorizontalAlignment="Center" FontSize="22" FontWeight="DemiBold"></Label>
-            <ListView ItemsSource="{Binding Managers}">
+            <Label Content="Менеджеры" HorizontalAlignment="Center" FontSize="22" FontWeight="DemiBold" ></Label>
+            <ListView MaxHeight="175" ItemsSource="{Binding Managers}" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Visible">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Id"
@@ -69,6 +76,13 @@
 
                     </GridView>
                 </ListView.View>
+                <ListView.Resources>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <EventSetter Event="MouseDoubleClick" Handler="Managers_MouseDoubleClick">
+
+                        </EventSetter>
+                    </Style>
+                </ListView.Resources>
             </ListView>
         </StackPanel>
     </Grid>

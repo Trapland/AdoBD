@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AdoBD.Entity
 {
-    public class Products
+    public class Product
     {
         public Guid Id { get; set; }
         public String Name { get; set; }
