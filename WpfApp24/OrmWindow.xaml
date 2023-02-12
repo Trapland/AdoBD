@@ -17,7 +17,15 @@
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="0">
-            <Label Content="Отделы" HorizontalAlignment="Center" FontSize="22" FontWeight="DemiBold"></Label>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Label Content="Отделы" FontSize="22" FontWeight="DemiBold" Grid.Column="1"/>
+                <Button x:Name="Create_Dep" Content="Create_Dep" FontSize="22" FontWeight="DemiBold" Grid.Column="2" Click="Create_Dep_Click"/>
+            </Grid>
             <ListView ItemsSource="{Binding Departments}">
                 <ListView.View>
                     <GridView>
@@ -31,7 +39,7 @@
                 <ListView.Resources>
                     <Style TargetType="{x:Type ListViewItem}">
                         <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick">
-                            
+
                         </EventSetter>
                     </Style>
                 </ListView.Resources>

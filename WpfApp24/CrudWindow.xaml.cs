@@ -44,6 +44,16 @@ namespace AdoBD
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
+            if(Name.Text == "")
+            {
+                MessageBox.Show("Name is empty, can`t be saved");
+                return;
+            }
+            else if(Name.Text == Department.Name)
+            {
+                this.DialogResult = false;
+                return;
+            }
             Department.Name = Name.Text;
             this.DialogResult = true; //то, что вернёт ShowDialog
             //this.Close();
@@ -51,8 +61,11 @@ namespace AdoBD
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            Department = null!;
-            this.DialogResult = true; //то, что вернёт ShowDialog
+            if(MessageBox.Show("Are you sure to delete?","Delete message", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            {
+                Department = null!;
+                this.DialogResult = true; //то, что вернёт ShowDialog
+            }
             //this.Close();
         }
 

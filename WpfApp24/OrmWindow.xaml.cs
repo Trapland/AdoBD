@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AdoBD.Entity;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
@@ -25,7 +26,7 @@ namespace AdoBD
         public ObservableCollection<Entity.Product> Products { get; set; }
         public ObservableCollection<Entity.Manager> Managers { get; set; }
         private SqlConnection _connection;
-        public CrudWindow _dialogDepartmet;
+        public CrudWindow _dialogDepartment;
         public OrmWindow()
         {
             InitializeComponent();
@@ -46,9 +47,9 @@ namespace AdoBD
                 #region Load Departments
                 cmd.CommandText = "SELECT D.Id, D.Name FROM Departments D";
                 var reader = cmd.ExecuteReader();
-                while(reader.Read())
+                while (reader.Read())
                 {
-                    Departments.Add(new Entity.Department{ Id = reader.GetGuid(0), Name = reader.GetString(1)});
+                    Departments.Add(new Entity.Department { Id = reader.GetGuid(0), Name = reader.GetString(1) });
                 }
                 #endregion
                 #region Load Products
@@ -58,7 +59,7 @@ namespace AdoBD
                 reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    Products.Add(new Entity.Product { Id = reader.GetGuid(0), Name = reader.GetString(1),Price = reader.GetDouble(2) });
+                    Products.Add(new Entity.Product { Id = reader.GetGuid(0), Name = reader.GetString(1), Price = reader.GetDouble(2) });
                 }
                 #endregion
                 #region Load Managers
@@ -68,10 +69,11 @@ namespace AdoBD
                 reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    Managers.Add(new Entity.Manager { 
-                        Id = reader.GetGuid(0), 
+                    Managers.Add(new Entity.Manager
+                    {
+                        Id = reader.GetGuid(0),
                         Surname = reader.GetString(1),
-                        Name = reader.GetString(2), 
+                        Name = reader.GetString(2),
                         Secname = reader.GetString(3),
                         Id_main_dep = reader.GetGuid(4),
                         Id_sec_dep = reader.GetValue(5) == DBNull.Value ? null : reader.GetGuid(5),
@@ -93,21 +95,44 @@ namespace AdoBD
         {
             //работа с бд через ORM упрощена до работы с коллекцией
             //sender - item, который имеет ссылку на Entity.Departments в коллекции Departments
-            if(sender is ListViewItem item)
+            if (sender is ListViewItem item)
             {
-                if(item.Content is Entity.Department department)
+                if (item.Content is Entity.Department department)
                 {
-                    _dialogDepartmet = new();
-                    _dialogDepartmet.Department = department;
-                    if(_dialogDepartmet.ShowDialog() == true)
+                    _dialogDepartment = new();
+                    _dialogDepartment.Department = department;
+                    SqlCommand cmd = new() { Connection = _connection };
+                    if (_dialogDepartment.ShowDialog() == true)
                     {
-                        if(_dialogDepartmet.Department is null) //Delete
+                        if (_dialogDepartment.Department is null) //Delete
                         {
-                            MessageBox.Show("Deleted");
+                            try
+                            {
+
+                                cmd.CommandText = $"Update Departments SET Name = 'Empty' WHERE Id = '{department.Id}'";
+                                cmd.ExecuteNonQuery();
+                                cmd.Dispose();
+                                MessageBox.Show("Deleted");
+                            }
+                            catch (SqlException ex)
+                            {
+                                MessageBox.Show(ex.Message, "Delete error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
                         }
                         else //Update
                         {
-                            MessageBox.Show(department.ToString());
+                            try
+                            {
+
+                                cmd.CommandText = $"Update Departments SET Name = '{department.Name}' WHERE Id = '{department.Id}'";
+                                cmd.ExecuteNonQuery();
+                                cmd.Dispose();
+                                MessageBox.Show(department.ToString());
+                            }
+                            catch (SqlException ex)
+                            {
+                                MessageBox.Show(ex.Message, "Update error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
                         }
                     }
                 }
@@ -135,6 +160,44 @@ namespace AdoBD
                     MessageBox.Show(manager.ToString());
                 }
             }
+        }
+
+        private void Create_Dep_Click(object sender, RoutedEventArgs e)
+        {
+            Entity.Department dep = new();
+            dep.Id = generateID();
+            dep.Name = "";
+            _dialogDepartment = new();
+            _dialogDepartment.Department = dep;
+            SqlCommand cmd = new() { Connection = _connection };
+            if (_dialogDepartment.ShowDialog() == true)
+            {
+                try
+                {
+                    for (int i = 0; i < Departments.Count; i++)
+                    {
+                        if (dep.Name == Departments[i].Name)
+                        {
+                            MessageBox.Show("this name already exists");
+                            return;
+                        }
+                    }
+                    cmd.CommandText = $"INSERT INTO Departments (Id, Name) VALUES('{dep.Id}', '{dep.Name}')";
+                    cmd.ExecuteNonQuery();
+                    cmd.Dispose();
+                    MessageBox.Show(dep.ToString());
+                    Departments.Add(dep);
+                }
+                catch (SqlException ex)
+                {
+                    MessageBox.Show(ex.Message, "Update error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        public Guid generateID()
+        {
+            return Guid.NewGuid();
         }
     }
 }
