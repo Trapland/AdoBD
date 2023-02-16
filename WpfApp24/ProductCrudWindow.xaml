@@ -1,4 +1,4 @@
-﻿<Window x:Class="AdoBD.CrudWindow"
+﻿<Window x:Class="AdoBD.ProductCrudWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,17 +6,21 @@
         xmlns:local="clr-namespace:AdoBD"
         mc:Ignorable="d"
         Loaded="Window_Loaded"
-        Title="CrudWindow" Height="180" Width="350">
+        Title="ProductCrudWindow" Height="230" Width="350">
     <Grid>
         <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
-            <Label Content="Редактируем отдел" FontWeight="DemiBold" FontSize="20" HorizontalAlignment="Center"></Label>
-            <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
-        <Label Width="50" Content="Id"></Label>
+            <Label Content="Редактируем продукт" FontWeight="DemiBold" FontSize="20" HorizontalAlignment="Center"></Label>
+            <StackPanel Orientation="Horizontal"  Margin="0 0 0 10">
+                <Label Width="50" Content="Id"></Label>
                 <TextBox x:Name="Id" Width="250" IsReadOnly="True"></TextBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
                 <Label Width="50" Content="Name"></Label>
                 <TextBox x:Name="Name" Width="250"></TextBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
+                <Label Width="50" Content="Price"></Label>
+                <TextBox x:Name="Price" Width="250"></TextBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <Button x:Name="SaveButton" Width="50" Margin="0 5 0 0" Content="Save" Click="SaveButton_Click"></Button>

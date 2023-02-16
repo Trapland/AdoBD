@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,6 +28,7 @@ namespace AdoBD
         public ObservableCollection<Entity.Manager> Managers { get; set; }
         private SqlConnection _connection;
         public CrudWindow _dialogDepartment;
+        public ProductCrudWindow _dialogProduct;
         public OrmWindow()
         {
             InitializeComponent();
@@ -124,7 +126,7 @@ namespace AdoBD
                             try
                             {
 
-                                cmd.CommandText = $"Update Departments SET Name = '{department.Name}' WHERE Id = '{department.Id}'";
+                                cmd.CommandText = $"Update Departments SET Name = N'{department.Name}' WHERE Id = '{department.Id}'";
                                 cmd.ExecuteNonQuery();
                                 cmd.Dispose();
                                 MessageBox.Show(department.ToString());
@@ -135,29 +137,6 @@ namespace AdoBD
                             }
                         }
                     }
-                }
-            }
-        }
-
-        private void Products_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            if (sender is ListViewItem item)
-            {
-                if (item.Content is Entity.Product product)
-                {
-                    MessageBox.Show(product.ToString());
-                }
-            }
-
-        }
-
-        private void Managers_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            if (sender is ListViewItem item)
-            {
-                if (item.Content is Entity.Manager manager)
-                {
-                    MessageBox.Show(manager.ToString());
                 }
             }
         }
@@ -182,7 +161,7 @@ namespace AdoBD
                             return;
                         }
                     }
-                    cmd.CommandText = $"INSERT INTO Departments (Id, Name) VALUES('{dep.Id}', '{dep.Name}')";
+                    cmd.CommandText = $"INSERT INTO Departments (Id, Name) VALUES('{dep.Id}', N'{dep.Name}')";
                     cmd.ExecuteNonQuery();
                     cmd.Dispose();
                     MessageBox.Show(dep.ToString());
@@ -191,6 +170,114 @@ namespace AdoBD
                 catch (SqlException ex)
                 {
                     MessageBox.Show(ex.Message, "Update error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        private void Products_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            //работа с бд через ORM упрощена до работы с коллекцией
+            //sender - item, который имеет ссылку на Entity.Departments в коллекции Departments
+            if (sender is ListViewItem item)
+            {
+                if (item.Content is Entity.Product product)
+                {
+                    _dialogProduct = new();
+                    _dialogProduct.Product = product;
+                    SqlCommand cmd = new() { Connection = _connection };
+                    if (_dialogProduct.ShowDialog() == true)
+                    {
+                        if (_dialogProduct.Product is null) //Delete
+                        {
+                            try
+                            {
+
+                                cmd.CommandText = $"Update Products SET Name = 'Empty', Price = 0 WHERE Id = '{product.Id}'";
+                                cmd.ExecuteNonQuery();
+                                cmd.Dispose();
+                                MessageBox.Show("Deleted");
+                            }
+                            catch (SqlException ex)
+                            {
+                                MessageBox.Show(ex.Message, "Delete error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
+                        }
+                        else //Update
+                        {
+                            try
+                            {
+                                cmd.CommandText = $"Update Products SET Name = N'{product.Name}',Price = {product.Price.ToString(CultureInfo.InvariantCulture)} WHERE Id = '{product.Id}'";
+                                cmd.ExecuteNonQuery();
+                                cmd.Dispose();
+                                MessageBox.Show(product.ToString());
+                            }
+                            catch (SqlException ex)
+                            {
+                                MessageBox.Show(ex.Message, "Update error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+
+        private void Create_Prod_Click(object sender, RoutedEventArgs e)
+        {
+            Entity.Product prod = new();
+            prod.Id = generateID();
+            prod.Name = "";
+            _dialogProduct = new();
+            _dialogProduct.Product = prod;
+            //SqlCommand cmd = new() { Connection = _connection };
+            if (_dialogProduct.ShowDialog() == true)
+            {
+                String sql = "INSERT INTO Products(Id,Name,Price) VALUES (@id, @name, @price)";
+                using SqlCommand cmd = new(sql, _connection);
+                cmd.Parameters.AddWithValue("@id", prod.Id);
+                cmd.Parameters.AddWithValue("@name", prod.Name);
+                cmd.Parameters.AddWithValue("@price", prod.Price);
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+                    MessageBox.Show(ex.Message, "Update error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                //не рекомендуется использовать
+                //try
+                //{
+                //    for (int i = 0; i < Products.Count; i++)
+                //    {
+                //        if (prod.Name == Products[i].Name)
+                //        {
+                //            MessageBox.Show("this name already exists");
+                //            return;
+                //        }
+                //    }
+                //    cmd.CommandText = $"INSERT INTO Products (Id, Name, Price) VALUES('{prod.Id}', N'{prod.Name}', {prod.Price.ToString(CultureInfo.InvariantCulture)})";
+                //    cmd.ExecuteNonQuery();
+                //    cmd.Dispose();
+                //    MessageBox.Show(prod.ToString());
+                //    Products.Add(prod);
+                //}
+                //catch (SqlException ex)
+                //{
+                //    MessageBox.Show(ex.Message, "Update error", MessageBoxButton.OK, MessageBoxImage.Error);
+                //}
+
+
+            }
+        }
+
+        private void Managers_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is ListViewItem item)
+            {
+                if (item.Content is Entity.Manager manager)
+                {
+                    MessageBox.Show(manager.ToString());
                 }
             }
         }

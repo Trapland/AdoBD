@@ -1,6 +1,7 @@
 ﻿using AdoBD.Entity;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,27 +17,29 @@ using System.Windows.Shapes;
 namespace AdoBD
 {
     /// <summary>
-    /// Логика взаимодействия для CrudWindow.xaml
+    /// Логика взаимодействия для ProductCrudWindow.xaml
     /// </summary>
-    public partial class CrudWindow : Window
+    /// 
+    public partial class ProductCrudWindow : Window
     {
-        public Entity.Department Department { get; set; }
-        public CrudWindow()
+        public Entity.Product Product { get; set; }
+        public ProductCrudWindow()  
         {
             InitializeComponent();
-            Department = null!;
-        }
+            Product = null!;
 
+        }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            if(Department is null)
+            if (Product is null)
             {
-                DeleteButton.IsEnabled= false;
+                DeleteButton.IsEnabled = false;
             }
             else
             {
-                Id.Text = Department.Id.ToString();
-                Name.Text = Department.Name;
+                Id.Text = Product.Id.ToString();
+                Name.Text = Product.Name;
+                Price.Text = Product.Price.ToString();
                 DeleteButton.IsEnabled = true;
 
             }
@@ -44,27 +47,27 @@ namespace AdoBD
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            if(Name.Text == "")
+            if (Name.Text == "")
             {
                 MessageBox.Show("Name is empty, can`t be saved");
-                Name.Focus();
                 return;
             }
-            else if(Name.Text == Department.Name)
+            else if (Name.Text == Product.Name)
             {
                 this.DialogResult = false;
                 return;
             }
-            Department.Name = Name.Text;
+            Product.Name = Name.Text;
+            Product.Price = Convert.ToDouble(Price.Text,CultureInfo.InvariantCulture);
             this.DialogResult = true; //то, что вернёт ShowDialog
             //this.Close();
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            if(MessageBox.Show("Are you sure to delete?","Delete message", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            if (MessageBox.Show("Are you sure to delete?", "Delete message", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
             {
-                Department = null!;
+                Product = null!;
                 this.DialogResult = true; //то, что вернёт ShowDialog
             }
             //this.Close();

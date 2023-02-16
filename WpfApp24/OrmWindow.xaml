@@ -46,7 +46,15 @@
             </ListView>
         </StackPanel>
         <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1">
-            <Label Content="Продукты" HorizontalAlignment="Center" FontSize="22" FontWeight="DemiBold"></Label>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Label Content="Продукты" FontSize="22" FontWeight="DemiBold" Grid.Column="1"/>
+                <Button x:Name="Create_Prod" Content="CreateProd" FontSize="22" FontWeight="DemiBold" Grid.Column="2" Click="Create_Prod_Click"/>
+            </Grid>
             <ListView MaxHeight="175" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Visible" ItemsSource="{Binding Products}">
                 <ListView.View>
                     <GridView>
