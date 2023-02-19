@@ -47,11 +47,11 @@ namespace AdoBD
                 SqlCommand cmd = new() { Connection = _connection };
 
                 #region Load Departments
-                cmd.CommandText = "SELECT D.Id, D.Name FROM Departments D";
+                cmd.CommandText = "SELECT D.* FROM Departments D";
                 var reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    Departments.Add(new Entity.Department { Id = reader.GetGuid(0), Name = reader.GetString(1) });
+                    Departments.Add(new Entity.Department(reader));
                 }
                 #endregion
                 #region Load Products
