@@ -1,0 +1,77 @@
+﻿<Window x:Class="AdoBD.ManagerCrudWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AdoBD"
+        mc:Ignorable="d"
+        Loaded="Window_Loaded"
+        Title="ManagerCrudWindow" Height="350" Width="380">
+    <Grid>
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+            <Label Content="Редактируем менеджера" FontWeight="DemiBold" FontSize="20" HorizontalAlignment="Center"></Label>
+            <StackPanel Orientation="Horizontal"  Margin="0 0 0 10">
+                <Label Width="50" Content="Id"></Label>
+                <TextBox x:Name="Id" Width="250" IsReadOnly="True"></TextBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
+                <Label Width="50" Content="Surname"></Label>
+                <TextBox x:Name="Surname" Width="250"></TextBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
+                <Label Width="50" Content="Name"></Label>
+                <TextBox x:Name="Name" Width="250"></TextBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
+                <Label Width="50" Content="Secname"></Label>
+                <TextBox x:Name="Secname" Width="250"></TextBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
+                <Label Width="50" Content="MainDep"></Label>
+                <ComboBox Width="250" x:Name="MainDep" ItemsSource="{Binding Departments}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Path=Name}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
+                <Label Width="50" Content="SecDep"></Label>
+                <ComboBox Width="190" x:Name="SecDep" ItemsSource="{Binding Departments}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Path=Name}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <Button x:Name="ClearSecDep" Content="Clear" Width="50" Margin="10 0 0 0" Click="ClearSecDep_Click"></Button>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
+                <Label Width="50" Content="Chief"></Label>
+                <ComboBox Width="190" x:Name="Chief" ItemsSource="{Binding Managers}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Path=Surname}"/>
+                                <TextBlock Text=" "/>
+                                <TextBlock Text="{Binding Path=Name}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <Button x:Name="ClearChief" Content="Clear" Width="50" Margin="10 0 0 0" Click="ClearChief_Click"></Button>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button x:Name="SaveButton" Width="50" Margin="0 5 0 0" Content="Save" Click="SaveButton_Click"></Button>
+                <Button x:Name="DeleteButton" Width="50" Margin="20 5 0 0" Content="Delete" Click="DeleteButton_Click"></Button>
+                <Button x:Name="CancelButton" Width="50" Margin="20 5 0 0" Content="Cancel" Click="CancelButton_Click"></Button>
+
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>

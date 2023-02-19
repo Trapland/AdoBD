@@ -17,9 +17,16 @@ namespace AdoBD.Entity
         public Guid Id_main_dep { get; set; }
         public Guid? Id_sec_dep { get; set; }
         public Guid? Id_chief { get; set; }
+        public Manager()
+        {
+            Id = Guid.NewGuid();
+            Surname = null!;
+            Name = null!;
+            Secname = null!;
+        }
         public override string ToString()
         {
-            return Id.ToString()[..5] + "... " + Surname + " " + Name + " " + Secname;
+            return Id.ToString()[..5] + "... " + Surname + " " + Name + " " + Secname + " " + Id_main_dep.ToString() + " " + Id_sec_dep.ToString() + " " + Id_chief.ToString();
         }
 
     }

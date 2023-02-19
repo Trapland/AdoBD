@@ -56,12 +56,12 @@ namespace AdoBD
                 #endregion
                 #region Load Products
                 cmd.Dispose();
-                cmd.CommandText = "SELECT P.Id, P.Name, P.Price FROM Products P";
+                cmd.CommandText = "SELECT P.* FROM Products P WHERE DeleteDt IS NULL";
                 reader.Close();
                 reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    Products.Add(new Entity.Product { Id = reader.GetGuid(0), Name = reader.GetString(1), Price = reader.GetDouble(2) });
+                    Products.Add(new Entity.Product(reader));
                 }
                 #endregion
                 #region Load Managers
@@ -277,7 +277,9 @@ namespace AdoBD
             {
                 if (item.Content is Entity.Manager manager)
                 {
-                    MessageBox.Show(manager.ToString());
+                    ManagerCrudWindow dialog = new ManagerCrudWindow() { Owner = this};
+                    dialog.Manager = manager;
+                    dialog.ShowDialog();
                 }
             }
         }
