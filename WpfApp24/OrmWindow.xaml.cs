@@ -29,6 +29,7 @@ namespace AdoBD
         private SqlConnection _connection;
         public CrudWindow _dialogDepartment;
         public ProductCrudWindow _dialogProduct;
+        public ManagerCrudWindow dialogManager;
         public OrmWindow()
         {
             InitializeComponent();
@@ -66,22 +67,12 @@ namespace AdoBD
                 #endregion
                 #region Load Managers
                 cmd.Dispose();
-                cmd.CommandText = "SELECT M.Id, M.Surname, M.Name, M.Secname, M.Id_main_dep, M.Id_sec_dep, M.Id_chief  FROM Managers M";
+                cmd.CommandText = "SELECT M.* FROM Managers M WHERE DeleteDt IS NULL";
                 reader.Close();
                 reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    Managers.Add(new Entity.Manager
-                    {
-                        Id = reader.GetGuid(0),
-                        Surname = reader.GetString(1),
-                        Name = reader.GetString(2),
-                        Secname = reader.GetString(3),
-                        Id_main_dep = reader.GetGuid(4),
-                        Id_sec_dep = reader.GetValue(5) == DBNull.Value ? null : reader.GetGuid(5),
-                        Id_chief = reader.IsDBNull(6) ? null : reader.GetGuid(6),
-
-                    });
+                    Managers.Add(new Entity.Manager(reader));
                 }
                 #endregion
                 cmd.Dispose();
@@ -192,7 +183,7 @@ namespace AdoBD
                             try
                             {
 
-                                cmd.CommandText = $"Update Products SET Name = 'Empty', Price = 0 WHERE Id = '{product.Id}'";
+                                cmd.CommandText = $"Update Products SET DeleteDt = SYSDATETIME() WHERE Id = '{product.Id}'";
                                 cmd.ExecuteNonQuery();
                                 cmd.Dispose();
                                 MessageBox.Show("Deleted");
@@ -273,13 +264,75 @@ namespace AdoBD
 
         private void Managers_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
+
             if (sender is ListViewItem item)
             {
                 if (item.Content is Entity.Manager manager)
                 {
-                    ManagerCrudWindow dialog = new ManagerCrudWindow() { Owner = this};
-                    dialog.Manager = manager;
-                    dialog.ShowDialog();
+                    dialogManager = new() { Owner = this};
+                    dialogManager.Manager = manager;
+                    SqlCommand cmd = new() { Connection = _connection };
+                    if (dialogManager.ShowDialog() == true)
+                    {
+                        if (dialogManager.Manager is null) //Delete
+                        {
+                            try
+                            {
+
+                                cmd.CommandText = $"Update Managers SET DeleteDt = SYSDATETIME() WHERE Id = '{manager.Id}'";
+                                cmd.ExecuteNonQuery();
+                                cmd.Dispose();
+                                MessageBox.Show("Deleted");
+                            }
+                            catch (SqlException ex)
+                            {
+                                MessageBox.Show(ex.Message, "Delete error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
+                        }
+                        else //Update
+                        {
+                            try
+                            {
+                                cmd.CommandText = $"Update Managers SET Surname = N'{manager.Surname}', Name = N'{manager.Name}', Secname = N'{manager.Secname}', Id_main_dep = '{manager.Id_main_dep}', Id_sec_dep = '{manager.Id_sec_dep}', Id_chief = '{manager.Id_chief}' WHERE Id = '{manager.Id}'";
+                                cmd.ExecuteNonQuery();
+                                cmd.Dispose();
+                                MessageBox.Show(manager.ToString());
+                            }
+                            catch (SqlException ex)
+                            {
+                                MessageBox.Show(ex.Message, "Update error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        private void Create_Manager_Click(object sender, RoutedEventArgs e)
+        {
+            Entity.Manager manager = new();
+            manager.Id = generateID();
+            manager.Name = "";
+            dialogManager = new() { Owner = this};
+            dialogManager.Manager = manager;
+            if (dialogManager.ShowDialog() == true)
+            {
+                String sql = "INSERT INTO Managers(Id,Surname,Name,Secname,Id_main_dep,Id_sec_dep,Id_chief) VALUES (@id, @surname, @name, @secname, @id_main_dep, @id_sec_dep, @id_chief)";
+                using SqlCommand cmd = new(sql, _connection);
+                cmd.Parameters.AddWithValue("@id", manager.Id);
+                cmd.Parameters.AddWithValue("@surname", manager.Surname);
+                cmd.Parameters.AddWithValue("@name", manager.Name);
+                cmd.Parameters.AddWithValue("@secname", manager.Secname);
+                cmd.Parameters.AddWithValue("@id_main_dep", manager.Id_main_dep);
+                cmd.Parameters.AddWithValue("@id_sec_dep", manager.Id_sec_dep);
+                cmd.Parameters.AddWithValue("@id_chief", manager.Id_chief);
+
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+                    MessageBox.Show(ex.Message, "Update error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
@@ -288,5 +341,6 @@ namespace AdoBD
         {
             return Guid.NewGuid();
         }
+
     }
 }

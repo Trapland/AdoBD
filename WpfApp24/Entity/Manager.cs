@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -23,6 +25,16 @@ namespace AdoBD.Entity
             Surname = null!;
             Name = null!;
             Secname = null!;
+        }
+        public Manager(SqlDataReader reader)
+        {
+            Id = reader.GetGuid("Id");
+            Surname = reader.GetString("Surname");
+            Name = reader.GetString("Name");
+            Secname = reader.GetString("Secname");
+            Id_main_dep = reader.GetGuid("Id_main_dep");
+            Id_sec_dep = reader.GetValue("Id_sec_dep") == DBNull.Value ? null : reader.GetGuid("Id_sec_dep");
+            Id_chief = reader.IsDBNull("Id_chief") ? null : reader.GetGuid("Id_chief");
         }
         public override string ToString()
         {

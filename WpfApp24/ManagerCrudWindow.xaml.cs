@@ -52,11 +52,9 @@ namespace AdoBD
                 Surname.Text = this.Manager.Surname;
                 Name.Text = this.Manager.Name;
                 Secname.Text = this.Manager.Secname;
-                MainDep.SelectedItem = OwnerDepartments.Where(d => d.Id == this.Manager.Id_main_dep).First();
+                MainDep.SelectedItem = OwnerDepartments.Where(d => d.Id == this.Manager.Id_main_dep).FirstOrDefault();
                 SecDep.SelectedItem = OwnerDepartments.Where(d => d.Id == this.Manager.Id_sec_dep).FirstOrDefault();
                 Chief.SelectedItem = (Owner as OrmWindow)?.Managers.Where(m => m.Id == this.Manager.Id_chief).FirstOrDefault();
-
-
             }
             Id.Text = this.Manager.Id.ToString();
         }
@@ -73,6 +71,26 @@ namespace AdoBD
                 this.DialogResult = false;
                 return;
             }
+            if (Surname.Text == "")
+            {
+                MessageBox.Show("Name is empty, can`t be saved");
+                return;
+            }
+            else if (Surname.Text == Manager.Surname)
+            {
+                this.DialogResult = false;
+                return;
+            }
+            if (Secname.Text == "")
+            {
+                MessageBox.Show("Name is empty, can`t be saved");
+                return;
+            }
+            else if (Secname.Text == Manager.Secname)
+            {
+                this.DialogResult = false;
+                return;
+            }
             Manager.Name = Name.Text;
             Manager.Surname = Surname.Text;
             Manager.Secname = Secname.Text;
@@ -83,6 +101,22 @@ namespace AdoBD
             else
             {
                 MessageBox.Show("MainDepComboBox.SelectedItem Cast Error");
+            }
+            if (SecDep.SelectedItem is Entity.Department depart)
+            {
+                Manager.Id_sec_dep = depart.Id;
+            }
+            else
+            {
+                MessageBox.Show("SecDepComboBox.SelectedItem Cast Error");
+            }
+            if (Chief.SelectedItem is Entity.Manager manag)
+            {
+                Manager.Id_chief = manag.Id;
+            }
+            else
+            {
+                MessageBox.Show("ChiefComboBox.SelectedItem Cast Error");
             }
             this.DialogResult = true; //то, что вернёт ShowDialog
             //this.Close();

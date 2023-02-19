@@ -79,7 +79,15 @@
             </ListView>
         </StackPanel>
         <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0">
-            <Label Content="Менеджеры" HorizontalAlignment="Center" FontSize="22" FontWeight="DemiBold" ></Label>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Label Content="Менеджеры" FontSize="22" FontWeight="DemiBold" Grid.Column="1"/>
+                <Button x:Name="Create_Manager" Content="CreateManager" FontSize="22" FontWeight="DemiBold" Grid.Column="2" Click="Create_Manager_Click"/>
+            </Grid>
             <ListView MaxHeight="175" ItemsSource="{Binding Managers}" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Visible">
                 <ListView.View>
                     <GridView>
@@ -91,6 +99,8 @@
                                         DisplayMemberBinding="{Binding Path=Name}"></GridViewColumn>
                         <GridViewColumn Header="Secname"
                                         DisplayMemberBinding="{Binding Path=Secname}"></GridViewColumn>
+                        <GridViewColumn Header="Del"
+                                        DisplayMemberBinding="{Binding Path=DeleteDt}"></GridViewColumn>
 
                     </GridView>
                 </ListView.View>
