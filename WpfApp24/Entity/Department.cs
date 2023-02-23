@@ -15,6 +15,7 @@ namespace AdoBD.Entity
         public String Name { get; set; }
         public Department()
         {
+            Id = Guid.NewGuid();
             Name = null!;
         }
         public Department(SqlDataReader reader)

@@ -1,0 +1,81 @@
+﻿<Window x:Class="AdoBD.SaleCrudWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AdoBD"
+        mc:Ignorable="d"
+        Loaded="Window_Loaded"
+        Title="SaleCrudWindow" Height="350" Width="500">
+    <StackPanel>
+        <Label Content="Редактируем продажи" HorizontalAlignment="Center"
+               FontSize="24" FontWeight="DemiBold"/>
+        <Grid Margin="20 10 30 20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="7*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Label Content="Id:" Grid.Row="0" Grid.Column="0" 
+                   HorizontalAlignment="Right" Margin="10 2 10 3" FontSize="16"/>
+            <TextBox x:Name="IdView"  Grid.Row="0" Grid.Column="1"
+                     IsReadOnly="True" Margin="0 5" FontSize="16" />
+
+            <Label Content="Date:" Grid.Row="1" Grid.Column="0" 
+                   HorizontalAlignment="Right" Margin="10 2 10 3" FontSize="16"/>
+            <TextBox x:Name="DateView"  Grid.Row="1" Grid.Column="1"
+                     IsReadOnly="True" Margin="0 5" FontSize="16"/>
+
+            <Label Content="Quantity:" Grid.Row="3" Grid.Column="0" 
+                   HorizontalAlignment="Right" Margin="10 2 10 3" FontSize="16"/>
+            <TextBox x:Name="QuantityView"  Grid.Row="3" Grid.Column="1"
+                      Margin="0 5" FontSize="16" />
+
+
+            <Label Content="Product:" Grid.Row="2" Grid.Column="0" 
+                   HorizontalAlignment="Right" Margin="10 2 10 3" FontSize="16"/>
+            <ComboBox Grid.Row="2" Grid.Column="1" Margin="0 5"
+                      x:Name="ProductComboBox" ItemsSource="{Binding Products}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Path=Name}"/>
+                            <TextBlock Text="  "/>
+                            <TextBlock Text="{Binding Path=Price}"/>
+                            <TextBlock Text=" грн."/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+            <Label Content="Manager:" Grid.Row="4" Grid.Column="0" 
+                   HorizontalAlignment="Right" Margin="10 2 10 3" FontSize="16"/>
+            <ComboBox Grid.Row="4" Grid.Column="1" Margin="0 5"
+                      x:Name="ManagerComboBox" ItemsSource="{Binding Managers}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Path=Surname}"/>
+                            <TextBlock Text=" "/>
+                            <TextBlock Text="{Binding Path=Name}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </Grid>
+        <UniformGrid Columns="3"  HorizontalAlignment="Center">
+            <Button x:Name="SaveButton"   Content="Save"   Padding="15 5" Margin="35 0"  FontSize="16"
+                    Click="SaveButton_Click"/>
+            <Button x:Name="DeleteButton" Content="Delete" Padding="15 5" Margin="35 0"  FontSize="16"
+                    Click="DeleteButton_Click"/>
+            <Button x:Name="CancelButton" Content="Cancel" Padding="15 5" Margin="35 0"  FontSize="16"
+                    Click="CancelButton_Click"/>
+        </UniformGrid>
+    </StackPanel>
+</Window>

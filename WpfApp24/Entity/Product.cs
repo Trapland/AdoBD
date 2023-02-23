@@ -16,6 +16,7 @@ namespace AdoBD.Entity
         public DateTime? DeleteDt { get; set; }
         public Product()
         {
+            Id = Guid.NewGuid();
             Name = null!;
             DeleteDt= null;
         }

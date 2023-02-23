@@ -37,5 +37,12 @@ namespace AdoBD
             new OrmWindow().ShowDialog();
             this.Show();
         }
+
+        private void DalButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Hide();
+            new DalWindow().ShowDialog();
+            this.Show();
+        }
     }
 }

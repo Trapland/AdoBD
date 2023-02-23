@@ -26,6 +26,7 @@ namespace AdoBD
         public ObservableCollection<Entity.Department> Departments { get; set; }
         public ObservableCollection<Entity.Product> Products { get; set; }
         public ObservableCollection<Entity.Manager> Managers { get; set; }
+        public ObservableCollection<Entity.Sale> Sales { get; set; }
         private SqlConnection _connection;
         public CrudWindow _dialogDepartment;
         public ProductCrudWindow _dialogProduct;
@@ -36,6 +37,7 @@ namespace AdoBD
             Departments = new();
             Products = new();
             Managers = new();
+            Sales = new();
             DataContext = this;
             _connection = new(App.ConnectionString);
         }
@@ -74,6 +76,16 @@ namespace AdoBD
                 {
                     Managers.Add(new Entity.Manager(reader));
                 }
+                #endregion
+                #region Load Sales
+                cmd.CommandText = "SELECT S.* FROM Sales S";
+                reader.Close();
+                reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    Sales.Add(new(reader));
+                }
+                reader.Close();
                 #endregion
                 cmd.Dispose();
             }
@@ -135,8 +147,6 @@ namespace AdoBD
         private void Create_Dep_Click(object sender, RoutedEventArgs e)
         {
             Entity.Department dep = new();
-            dep.Id = generateID();
-            dep.Name = "";
             _dialogDepartment = new();
             _dialogDepartment.Department = dep;
             SqlCommand cmd = new() { Connection = _connection };
@@ -216,8 +226,6 @@ namespace AdoBD
         private void Create_Prod_Click(object sender, RoutedEventArgs e)
         {
             Entity.Product prod = new();
-            prod.Id = generateID();
-            prod.Name = "";
             _dialogProduct = new();
             _dialogProduct.Product = prod;
             //SqlCommand cmd = new() { Connection = _connection };
@@ -310,8 +318,6 @@ namespace AdoBD
         private void Create_Manager_Click(object sender, RoutedEventArgs e)
         {
             Entity.Manager manager = new();
-            manager.Id = generateID();
-            manager.Name = "";
             dialogManager = new() { Owner = this};
             dialogManager.Manager = manager;
             if (dialogManager.ShowDialog() == true)
@@ -337,10 +343,43 @@ namespace AdoBD
             }
         }
 
-        public Guid generateID()
+        private void SalesItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            return Guid.NewGuid();
+            if (sender is ListViewItem item)
+            {
+                if (item.Content is Entity.Sale sale)
+                {
+                    MessageBox.Show(sale.SaleDt.ToString());
+                }
+            }
         }
-
+        private void AddSaleButton_Click(object sender, RoutedEventArgs e)
+        {
+            SaleCrudWindow dialog = new(null!) { Owner = this };
+            if (dialog.ShowDialog() == true)
+            {
+                using SqlCommand cmd = new(
+                    $"INSERT INTO Sales(Id, ProductId, ManagerId, Quantity, SaleDt) " +
+                    $"VALUES(@id, @prod, @manager, @count, @moment)", _connection
+                );
+                cmd.Parameters.AddWithValue("@id", dialog.Sale.Id);
+                cmd.Parameters.AddWithValue("@prod", dialog.Sale.ProductId);
+                cmd.Parameters.AddWithValue("@manager", dialog.Sale.ManagerId);
+                cmd.Parameters.AddWithValue("@count", dialog.Sale.Quantity);
+                cmd.Parameters.AddWithValue("@moment", dialog.Sale.SaleDt);
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    this.Sales.Add(dialog.Sale);
+                    MessageBox.Show("Insert OK");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Insert Fails: " + ex.Message);
+                }
+            }
+            /* Д.З. Реалізувати задачі "Update", "Delete" для Sales
+             */
+        }
     }
 }

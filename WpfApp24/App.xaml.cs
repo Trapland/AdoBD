@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AdoBD.Service;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -14,5 +15,6 @@ namespace AdoBD
     public partial class App : Application
     {
         public static readonly String ConnectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\boyar\source\repos\WpfApp24\WpfApp24\Database1.mdf;Integrated Security=True";
+        internal static readonly Logger Logger = new("Log.txt");
     }
 }
