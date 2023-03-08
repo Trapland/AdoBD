@@ -40,6 +40,44 @@ namespace AdoBD.DAL
                 return false;
             }
         }
+        public bool Delete(Entity.Department department)
+        {
+            try
+            {
+                using SqlCommand cmd = new() { Connection = _connection };
+                cmd.CommandText = $"Update Departments SET Name = 'Empty' WHERE Id = '{department.Id}'";
+                cmd.ExecuteNonQuery();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                String msg = DateTime.Now.ToString() + ": " +
+                    this.GetType().Name + " " +
+                    System.Reflection.MethodBase.GetCurrentMethod()?.Name + " " +
+                    ex.Message;
+                App.Logger.Log(msg);
+                return false;
+            }
+        }
+        public bool Update(Entity.Department department)
+        {
+            try
+            {
+                using SqlCommand cmd = new() { Connection = _connection };
+                cmd.CommandText = $"Update Departments SET Name = N'{department.Name}' WHERE Id = '{department.Id}'";
+                cmd.ExecuteNonQuery();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                String msg = DateTime.Now.ToString() + ": " +
+                    this.GetType().Name + " " +
+                    System.Reflection.MethodBase.GetCurrentMethod()?.Name + " " +
+                    ex.Message;
+                App.Logger.Log(msg);
+                return false;
+            }
+        }
         public List<Entity.Department> GetAll()
         {
             var list = new List<Entity.Department>();

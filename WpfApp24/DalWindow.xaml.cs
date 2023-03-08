@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Runtime.Intrinsics.Arm;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -52,7 +53,48 @@ namespace AdoBD
             {
                 if (item.Content is Entity.Department department)
                 {
-                    MessageBox.Show(department.ToString());
+                    _dialogDepartment = new();
+                    _dialogDepartment.Department = department;
+                    if (_dialogDepartment.ShowDialog() == true)
+                    {
+                        if (_dialogDepartment.Department is null) //Delete
+                        {
+                            try
+                            {
+                                if (dataContext.Departments.Delete(department))
+                                {
+                                    DepartmentList.Remove(department);
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Ошибка удаления");
+                                }
+                                MessageBox.Show("Deleted");
+                            }
+                            catch (SqlException ex)
+                            {
+                                MessageBox.Show(ex.Message, "Delete error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
+                        }
+                        else //Update
+                        {
+                            try
+                            {
+                                if (dataContext.Departments.Update(department))
+                                {
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Ошибка обновления");
+                                }
+                                MessageBox.Show(department.ToString());
+                            }
+                            catch (SqlException ex)
+                            {
+                                MessageBox.Show(ex.Message, "Update error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
+                        }
+                    }
                 }
             }
         }
