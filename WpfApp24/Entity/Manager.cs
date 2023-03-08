@@ -19,6 +19,7 @@ namespace AdoBD.Entity
         public Guid Id_main_dep { get; set; }
         public Guid? Id_sec_dep { get; set; }
         public Guid? Id_chief { get; set; }
+        public DateTime? DeleteDt { get; set; }
         public Manager()
         {
             Id = Guid.NewGuid();
@@ -35,6 +36,7 @@ namespace AdoBD.Entity
             Id_main_dep = reader.GetGuid("Id_main_dep");
             Id_sec_dep = reader.GetValue("Id_sec_dep") == DBNull.Value ? null : reader.GetGuid("Id_sec_dep");
             Id_chief = reader.IsDBNull("Id_chief") ? null : reader.GetGuid("Id_chief");
+            DeleteDt = reader.IsDBNull("DeleteDt") ? null : reader.GetDateTime("DeleteDt");
         }
         public override string ToString()
         {

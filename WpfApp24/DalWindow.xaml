@@ -45,5 +45,35 @@
                 </ListView.Resources>
             </ListView>
         </StackPanel>
+
+        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Label Content="Менеджеры" FontSize="22" FontWeight="DemiBold" Grid.Column="1"/>
+                <Button x:Name="Create_Man" Content="Create_Man" FontSize="22" FontWeight="DemiBold" Grid.Column="2" Click="Create_Man_Click"/>
+            </Grid>
+            <ListView ItemsSource="{Binding ManagerList}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Id"
+                                        DisplayMemberBinding="{Binding Path=Id}"></GridViewColumn>
+                        <GridViewColumn Header="Name"
+                                        DisplayMemberBinding="{Binding Path=Name}"></GridViewColumn>
+
+                    </GridView>
+                </ListView.View>
+                <ListView.Resources>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <EventSetter Event="MouseDoubleClick" Handler="ManagersItem_MouseDoubleClick">
+
+                        </EventSetter>
+                    </Style>
+                </ListView.Resources>
+            </ListView>
+        </StackPanel>
     </Grid>
 </Window>

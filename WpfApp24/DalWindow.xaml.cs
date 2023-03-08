@@ -24,13 +24,18 @@ namespace AdoBD
     public partial class DalWindow : Window
     {
         private readonly DAL.DataContext dataContext;
+
         public ObservableCollection<Entity.Department> DepartmentList { get; set; }
+
+        public ObservableCollection<Entity.Manager> ManagerList { get; set; }
+
         CrudWindow _dialogDepartment;
         public DalWindow()
         {
             InitializeComponent();
             dataContext= new();
             DepartmentList= new(dataContext.Departments.GetAll());
+            ManagerList = new(dataContext.Managers.GetAll());
             this.DataContext = this;
         }
 
@@ -82,6 +87,22 @@ namespace AdoBD
                 catch (SqlException ex)
                 {
                     MessageBox.Show(ex.Message, "Update error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        private void Create_Man_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ManagersItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is ListViewItem item)
+            {
+                if (item.Content is Entity.Manager manager)
+                {
+                    MessageBox.Show(manager.ToString());
                 }
             }
         }

@@ -31,6 +31,7 @@ namespace AdoBD
         public CrudWindow _dialogDepartment;
         public ProductCrudWindow _dialogProduct;
         public ManagerCrudWindow dialogManager;
+        public SaleCrudWindow _dialogSale;
         public OrmWindow()
         {
             InitializeComponent();
@@ -78,7 +79,7 @@ namespace AdoBD
                 }
                 #endregion
                 #region Load Sales
-                cmd.CommandText = "SELECT S.* FROM Sales S";
+                cmd.CommandText = "SELECT S.* FROM Sales S WHERE DeleteDt IS NULL";
                 reader.Close();
                 reader = cmd.ExecuteReader();
                 while (reader.Read())
@@ -315,6 +316,7 @@ namespace AdoBD
                 }
             }
         }
+
         private void Create_Manager_Click(object sender, RoutedEventArgs e)
         {
             Entity.Manager manager = new();
@@ -349,7 +351,40 @@ namespace AdoBD
             {
                 if (item.Content is Entity.Sale sale)
                 {
-                    MessageBox.Show(sale.SaleDt.ToString());
+                    _dialogSale = new(sale) { Owner = this };
+                    SqlCommand cmd = new() { Connection = _connection };
+                    if (_dialogSale.ShowDialog() == true)
+                    {
+                        if (_dialogSale.Sale is null) //Delete
+                        {
+                            try
+                            {
+
+                                cmd.CommandText = $"Update Sales SET DeleteDt = SYSDATETIME() WHERE Id = '{sale.Id}'";
+                                cmd.ExecuteNonQuery();
+                                cmd.Dispose();
+                                MessageBox.Show("Deleted");
+                            }
+                            catch (SqlException ex)
+                            {
+                                MessageBox.Show(ex.Message, "Delete error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
+                        }
+                        else //Update
+                        {
+                            try
+                            {
+                                cmd.CommandText = $"Update Sales SET Quantity = '{sale.Quantity}', ProductId = '{sale.ProductId}', ManagerId = '{sale.ManagerId}', SaleDt = '{sale.SaleDt}' WHERE Id = '{sale.Id}'";
+                                cmd.ExecuteNonQuery();
+                                cmd.Dispose();
+                                MessageBox.Show(sale.ToString());
+                            }
+                            catch (SqlException ex)
+                            {
+                                MessageBox.Show(ex.Message, "Update error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -378,8 +413,6 @@ namespace AdoBD
                     MessageBox.Show("Insert Fails: " + ex.Message);
                 }
             }
-            /* Д.З. Реалізувати задачі "Update", "Delete" для Sales
-             */
         }
     }
 }

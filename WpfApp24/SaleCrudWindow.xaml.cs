@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AdoBD.Entity;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -121,6 +122,7 @@ namespace AdoBD
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
+            Sale = null!;
             this.DialogResult = true;
         }
 

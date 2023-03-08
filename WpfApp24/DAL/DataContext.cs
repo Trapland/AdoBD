@@ -11,6 +11,8 @@ namespace AdoBD.DAL
     {
         private SqlConnection _connection;
         internal DepartmentApi Departments { get; set; }
+        internal ManagerApi Managers { get; set; }
+
         public DataContext()
         {
             _connection = new SqlConnection(App.ConnectionString);
@@ -28,6 +30,7 @@ namespace AdoBD.DAL
                 throw new Exception("Context creation failed. See server logs for details.");
             }
             Departments = new(_connection);
+            Managers = new(_connection);
         }
     }
 }

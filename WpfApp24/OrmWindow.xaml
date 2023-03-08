@@ -137,6 +137,9 @@
                         <GridViewColumn
                             Header="Количество"
                             DisplayMemberBinding="{Binding Path=Quantity}"/>
+                        <GridViewColumn
+                            Header="Товар"
+                            DisplayMemberBinding="{Binding Path=ProductId}"/>
                     </GridView>
                 </ListView.View>
                 <ListView.Resources>
