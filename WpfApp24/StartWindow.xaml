@@ -11,5 +11,6 @@
         <Button x:Name="BasicsButton" Margin="20 10" Content="1. Основы технологии" HorizontalContentAlignment="Left" Padding="20 5" Click="BasicsButton_Click"></Button>
         <Button x:Name="OrmButton" Margin="20 10"  Content="2. ORM" HorizontalContentAlignment="Left" Padding="20 5" Click="OrmButton_Click"></Button>
         <Button x:Name="DalButton" Margin="20 10"  Content="3. DAL, Data Context" HorizontalContentAlignment="Left" Padding="20 5" Click="DalButton_Click"></Button>
+        <Button x:Name="EfButton" Margin="20 10"  Content="4. Ef" HorizontalContentAlignment="Left" Padding="20 5" Click="EfButton_Click"></Button>
     </StackPanel>
 </Window>
