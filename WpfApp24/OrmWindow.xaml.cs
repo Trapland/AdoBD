@@ -51,7 +51,7 @@ namespace AdoBD
                 SqlCommand cmd = new() { Connection = _connection };
 
                 #region Load Departments
-                cmd.CommandText = "SELECT D.* FROM Departments D";
+                cmd.CommandText = "SELECT D.* FROM Departments D WHERE DeleteDt IS NULL";
                 var reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
@@ -115,7 +115,7 @@ namespace AdoBD
                             try
                             {
 
-                                cmd.CommandText = $"Update Departments SET Name = 'Empty' WHERE Id = '{department.Id}'";
+                                cmd.CommandText = $"Update Departments SET DeleteDt = SYSDATETIME() WHERE Id = '{department.Id}'";
                                 cmd.ExecuteNonQuery();
                                 cmd.Dispose();
                                 MessageBox.Show("Deleted");
@@ -141,6 +141,17 @@ namespace AdoBD
                             }
                         }
                     }
+                    Departments.Clear();
+                    #region Load Departments
+                    cmd.CommandText = "SELECT D.* FROM Departments D WHERE DeleteDt IS NULL";
+                    var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Departments.Add(new Entity.Department(reader));
+                    }
+                    cmd.Dispose();
+                    reader.Close();
+                    #endregion
                 }
             }
         }
