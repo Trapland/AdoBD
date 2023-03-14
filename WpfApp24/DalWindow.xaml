@@ -56,13 +56,15 @@
                 <Label Content="Менеджеры" FontSize="22" FontWeight="DemiBold" Grid.Column="1"/>
                 <Button x:Name="Create_Man" Content="Create_Man" FontSize="22" FontWeight="DemiBold" Grid.Column="2" Click="Create_Man_Click"/>
             </Grid>
-            <ListView ItemsSource="{Binding ManagerList}">
+            <ListView x:Name="ManList" ItemsSource="{Binding ManagerList}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Id"
                                         DisplayMemberBinding="{Binding Path=Id}"></GridViewColumn>
                         <GridViewColumn Header="Name"
                                         DisplayMemberBinding="{Binding Path=Name}"></GridViewColumn>
+                        <GridViewColumn Header="Chief"
+                                        DisplayMemberBinding="{Binding Path=Id_chief}"></GridViewColumn>
 
                     </GridView>
                 </ListView.View>

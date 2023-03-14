@@ -43,6 +43,7 @@ namespace AdoBD
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             // MessageBox.Show(dataContext.Departments.GetAll().Count.ToString());
+
         }
 
         private void DepartmentItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
