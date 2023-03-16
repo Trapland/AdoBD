@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AdoBD"
         mc:Ignorable="d"
-        Loaded="Window_Loaded"
-        Title="EFWindow" Height="450" Width="800">
+            Loaded="Window_Loaded"
+        Title="EFWindow" Height="650" Width="1000">
     <Grid ShowGridLines="True">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -19,35 +19,22 @@
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Vertical">
-            <Label Content="Monitor"
-                   HorizontalAlignment="Center"
-                   FontSize="18"/>
+            <Label Content="Monitor" HorizontalAlignment="Center" FontSize="18"/>
             <TextBlock x:Name="MonitorBlock"/>
         </StackPanel>
 
-        <StackPanel Orientation="Vertical"
-                    Grid.Row="0"
-                    Grid.Column="1">
-            <StackPanel Orientation="Horizontal"
-                        HorizontalAlignment="Center">
-                <CheckBox x:Name="ShowAllDepsCheckBox"
-                          Content="Show deleted"
-                          VerticalAlignment="Center"
-                          Margin="10 0 35 0"
-                          Checked="ShowAllDepsCheckBox_Checked"
-                          Unchecked="ShowAllDepsCheckBox_Unchecked"/>
-                <Label Content="Departments"
-                       FontSize="18"/>
-                <Button Content="+"
-                        FontSize="18"
-                        Margin="7 3"
-                        Padding="7 1 7 5"
-                        x:Name="AddDepartmentButton"
-                        Click="AddDepartmentButton_Click"/>
+        <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <CheckBox x:Name="ShowAllDepsCheckbox" Content="Show deleted"
+                          VerticalAlignment="Center" Margin="10 0 35 0"
+                          Unchecked="ShowAllDepsCheckbox_Unchecked"
+                          Checked="ShowAllDepsCheckbox_Checked"/>
+                <Label Content="Departments" FontSize="18"/>
+                <Button Content="+" FontSize="18" Margin="7 3" Padding="7 1 7 5"
+                        x:Name="AddDepartmentButton" Click="AddDepartmentButton_Click"/>
             </StackPanel>
-            <ListView x:Name="depList"
-                      ScrollViewer.VerticalScrollBarVisibility="Auto"
-                      MaxHeight="370">
+            <ListView x:Name="depList" ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                      ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="370">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn
@@ -62,14 +49,71 @@
                             DisplayMemberBinding="{Binding Path=DeleteDt}"/>
                     </GridView>
                 </ListView.View>
-                <ListView.Resources>
-                    <Style TargetType="{x:Type ListViewItem}">
-                        <EventSetter
-                            Event="MouseDoubleClick"
-                            Handler="DepartmentItem_MouseDoubleClick"/>
-                    </Style>
-                </ListView.Resources>
             </ListView>
+            <!-- List -->
         </StackPanel>
+
+        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Label Content="Daily statistics" HorizontalAlignment="Center" 
+                       FontSize="22" FontWeight="DemiBold"/>
+                <Button Content="+ sales" FontSize="18" Margin="20 3 0 3" Padding="7 0 7 4"
+                        x:Name="GenerateSalesButton" Click="GenerateSalesButton_Click"/>
+            </StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0"  Content="Sales, checks"/>
+                <Label Grid.Row="0" Grid.Column="1"  x:Name="SalesChecks"/>
+
+                <Label Grid.Row="1" Grid.Column="0"  Content="Sales, pcs"/>
+                <Label Grid.Row="1" Grid.Column="1"  x:Name="SalesPcs"/>
+
+                <Label Grid.Row="2" Grid.Column="0"  Content="Best pcs"/>
+                <Label Grid.Row="2" Grid.Column="1"  x:Name="BestPcs"/>
+
+                <Label Grid.Row="3" Grid.Column="0"  Content="Start moment"/>
+                <Label Grid.Row="3" Grid.Column="1"  x:Name="StartMoment"/>
+
+                <Label Grid.Row="4" Grid.Column="0"  Content="Finish moment"/>
+                <Label Grid.Row="4" Grid.Column="1"  x:Name="FinishMoment"/>
+
+                <Label Grid.Row="5" Grid.Column="0"  Content="Avg pcs"/>
+                <Label Grid.Row="5" Grid.Column="1"  x:Name="AvgPcs"/>
+
+                <Separator Grid.Row="6" Grid.ColumnSpan="2"/>
+
+                <Label Grid.Row="7" Grid.Column="0"  Content="Best Product"/>
+                <Label Grid.Row="7" Grid.Column="1"  x:Name="BestProduct"/>
+
+                <Label Grid.Row="8" Grid.Column="0"  Content="Best Manager"/>
+                <Label Grid.Row="8" Grid.Column="1"  x:Name="BestManager"/>
+                <Label Grid.Row="9" Grid.Column="0" x:Name="BestManagersItems" Content="Top 3 Managers: ">
+                </Label>
+                <Label Grid.Row="10" Grid.Column="0" x:Name="BestMoneyItems" Content="Top 3 Money: ">
+                </Label>
+            </Grid>
+        </StackPanel>
+
+        <TextBlock Grid.Row="1" Grid.Column="1" x:Name="LogBlock"/>
     </Grid>
 </Window>

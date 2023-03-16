@@ -16,7 +16,7 @@ namespace AdoBD.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SaleDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    SaleDt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     ManagerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
