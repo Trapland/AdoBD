@@ -111,7 +111,7 @@ namespace AdoBD
             }
 
 
-            var query3 = efContext.Products
+            var StatSales = efContext.Products
                 .GroupJoin(
                     efContext.Sales.Where(s => s.SaleDt.Date == DateTime.Today),
                     p => p.Id,
@@ -123,12 +123,12 @@ namespace AdoBD
                     }
                 ).OrderByDescending(g => g.Cnt);
 
-            foreach (var item in query3)
+            foreach (var item in StatSales)
             {
                 LogBlock.Text += $"{item.Name} -- {item.Cnt}  -- {item.Prc.ToString("0.00")} UAH \n";
             }
 
-            BestProduct.Content = query3.First().Name;
+            BestProduct.Content = StatSales.First().Name;
         }
         private void AddDepartmentButton_Click(object sender, RoutedEventArgs e)
         {
