@@ -118,13 +118,14 @@ namespace AdoBD
                     s => s.ProductId,
                     (p, sales) => new {
                         Name = p.Name,
-                        Cnt = sales.Count() 
+                        Cnt = sales.Count(),
+                        Prc = sales.Join(efContext.Products, sale => sale.ProductId, product => product.Id, (sale, product) => sale.Quantity * product.Price).Sum()
                     }
                 ).OrderByDescending(g => g.Cnt);
 
             foreach (var item in query3)
             {
-                LogBlock.Text += $"{item.Name} -- {item.Cnt}\n";
+                LogBlock.Text += $"{item.Name} -- {item.Cnt}  -- {item.Prc.ToString("0.00")} UAH \n";
             }
 
             BestProduct.Content = query3.First().Name;
