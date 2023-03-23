@@ -85,22 +85,23 @@
                 <Label Grid.Row="0" Grid.Column="0"  Content="Sales, checks"/>
                 <Label Grid.Row="0" Grid.Column="1"  x:Name="SalesChecks"/>
 
-                <Label Grid.Row="1" Grid.Column="0"  Content="Sales, pcs"/>
-                <Label Grid.Row="1" Grid.Column="1"  x:Name="SalesPcs"/>
+                <Label Grid.Row="1" Grid.Column="0"  Content="Sales, cnt"/>
+                <Label Grid.Row="1" Grid.Column="1"  x:Name="SalesCnt"/>
 
-                <Label Grid.Row="2" Grid.Column="0"  Content="Best pcs"/>
-                <Label Grid.Row="2" Grid.Column="1"  x:Name="BestPcs"/>
+                <Label Grid.Row="2" Grid.Column="0"  Content="Start moment"/>
+                <Label Grid.Row="2" Grid.Column="1"  x:Name="StartMoment"/>
 
-                <Label Grid.Row="3" Grid.Column="0"  Content="Start moment"/>
-                <Label Grid.Row="3" Grid.Column="1"  x:Name="StartMoment"/>
+                <Label Grid.Row="3" Grid.Column="0"  Content="Finish moment"/>
+                <Label Grid.Row="3" Grid.Column="1"  x:Name="FinishMoment"/>
 
-                <Label Grid.Row="4" Grid.Column="0"  Content="Finish moment"/>
-                <Label Grid.Row="4" Grid.Column="1"  x:Name="FinishMoment"/>
+                <Label Grid.Row="4" Grid.Column="0"  Content="MaxCheck cnt: "/>
+                <Label Grid.Row="4" Grid.Column="1"  x:Name="MaxCheckCnt"/>
 
-                <Label Grid.Row="5" Grid.Column="0"  Content="Avg pcs"/>
-                <Label Grid.Row="5" Grid.Column="1"  x:Name="AvgPcs"/>
+                <Label Grid.Row="5" Grid.Column="0"  Content="AvgCheck cnt: "/>
+                <Label Grid.Row="5" Grid.Column="1"  x:Name="AvgCheckCnt"/>
 
-                <Separator Grid.Row="6" Grid.ColumnSpan="2"/>
+                <Label Grid.Row="6" Grid.Column="0" Content="DeletedCheck cnt: "/>
+                <Label Grid.Row="6" Grid.Column="1" x:Name="DeletedCheckCnt"/>
 
                 <Label Grid.Row="7" Grid.Column="0"  Content="Best Product"/>
                 <Label Grid.Row="7" Grid.Column="1"  x:Name="BestProduct"/>

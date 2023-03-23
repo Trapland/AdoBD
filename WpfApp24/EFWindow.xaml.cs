@@ -54,22 +54,22 @@ namespace AdoBD
         {
             // загальна кількість чеків (записів Sales) за сьогодні
             var todaySales = efContext.Sales.Where(s => s.SaleDt.Date == DateTime.Today);
-            // виконання запиту на даному етапі немає, тільки План
-
              SalesChecks.Content = todaySales.Count().ToString();  // .Count() - запускає запит
-
-
+            var allSalesCnt = efContext.Sales;
 
             // загальна кількість проданих товарів (сума Sales.Quantity) за сьогодні
-            SalesPcs.Content = "0";
-            // найкращий чек за кількістю (Sales.Quantity)
-            BestPcs.Content = "0";
-            // момент початку продажів за сьогодні (мін час)
-            StartMoment.Content = "0";
-            // момент закінчення продажів (за сьогодні)
-            FinishMoment.Content = "0";
-            // "середній чек" - середня кількість товарів, що продається у чеку (за сьогодні)
-            AvgPcs.Content = "0";
+            SalesCnt.Content = allSalesCnt.Count().ToString();
+            // фактичний час старту продажів сьогодні
+            StartMoment.Content = todaySales.Min(s => s.SaleDt).ToString();
+            // час останнього продажу
+            FinishMoment.Content = todaySales.Max(s => s.SaleDt).ToString();
+            // максимальна кількість товарів у одному чеку (за сьогодні)
+            MaxCheckCnt.Content = todaySales.Max(s => s.Quantity).ToString();
+            // "середній чек" за кількістю - середнє значення кількості проданих товарів на один чек
+            AvgCheckCnt.Content = todaySales.Average(s => s.Quantity).ToString();
+            // Повернення - чеки, що є видаленими (кількість чеків за сьогодні)
+            DeletedCheckCnt.Content = todaySales.Count(s => s.DeleteDt != null).ToString();
+
 
             ///////////////////////////////////////////////////////////////////////////
 
