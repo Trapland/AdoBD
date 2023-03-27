@@ -116,9 +116,18 @@
         </StackPanel>
 
         <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="2">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Label Content="Departments stats" HorizontalAlignment="Center" 
-                       FontSize="22" FontWeight="DemiBold"/>
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Width="333">
+                <Label HorizontalAlignment="Center" Content="Departments stats" FontSize="20" FontWeight="DemiBold"></Label>
+                <ListView x:Name="DepartmentsStatList" ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                      ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="370">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Path=Name}" />
+                            <GridViewColumn Header="Count" DisplayMemberBinding="{Binding Path=Cnt}" />
+                            <GridViewColumn Header="Sum" DisplayMemberBinding="{Binding Path=Sum, StringFormat=0.00}" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
             </StackPanel>
             <Grid>
                 <Grid.ColumnDefinitions>

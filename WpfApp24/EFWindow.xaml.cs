@@ -70,7 +70,6 @@ namespace AdoBD
             // Повернення - чеки, що є видаленими (кількість чеків за сьогодні)
             DeletedCheckCnt.Content = todaySales.Count(s => s.DeleteDt != null).ToString();
 
-
             ///////////////////////////////////////////////////////////////////////////
 
             var queryMan = efContext.Managers
@@ -83,7 +82,8 @@ namespace AdoBD
                  Id = m.IdMainDep,
                  Name = m.Name,
                  Surname = m.Surname,
-                 Cnt = sales.Count()
+                 Cnt = sales.Count(),
+                 Sum = sales.Join(efContext.Products, sale => sale.ProductId, product => product.Id, (sale, product) => sale.Quantity * product.Price).Sum()
              }
              ).OrderByDescending(g => g.Cnt);
 
@@ -91,27 +91,33 @@ namespace AdoBD
             foreach (var item in queryMan)
             {
                 BestManagersItems.Content += "\n" + item.Surname + " " + item.Name + "---" + item.Cnt;
-            }
-
-            var queryMoney = efContext.Managers
-             .GroupJoin(
-             todaySales,
-             m => m.Id,
-             s => s.ManagerId,
-             (m, sales) => new
-             {
-                 Name = m.Name,
-                 Surname = m.Surname,
-                 Cnt = sales.Join(efContext.Products, sale => sale.ProductId, product => product.Id, (sale, product) => sale.Quantity * product.Price).Sum()
-             }
-             ).OrderByDescending(g => g.Cnt).Take(3);
-
-            foreach (var item in queryMoney)
-            {
-                BestMoneyItems.Content += "\n" + item.Surname + " " + item.Name + "---" + item.Cnt.ToString("0.00") + " UAH";
+                BestMoneyItems.Content += "\n" + item.Surname + " " + item.Name + "---" + item.Sum.ToString("0.00") + " UAH";
             }
 
             ///////////////////////////////////////////////
+            
+            var StatSales = efContext.Products
+                  .GroupJoin(
+                 todaySales,
+                 p => p.Id,
+                 s => s.ProductId,
+                 (p, sales) => new
+                 {
+                     Name = p.Name,
+                     Cnt = sales.Count(),
+                     Prc = sales.Join(efContext.Products, sale => sale.ProductId, product => product.Id, (sale, product) => sale.Quantity * product.Price).Sum()
+                 }
+                 ).OrderByDescending(g => g.Cnt);
+
+            foreach (var item in StatSales)
+            {
+                LogBlock.Text += $"{item.Name} -- {item.Cnt}  -- {item.Prc.ToString("0.00")} UAH \n";
+            }
+
+            BestProduct.Content = StatSales.First().Name;
+
+
+            ///////////////////////////////////////////////////////
 
 
             var queryDeps = efContext.Departments.ToList()
@@ -138,32 +144,10 @@ namespace AdoBD
              }
              ).OrderByDescending(it => it.Cnt);
 
-            foreach (var item in queryDeps)
-            {
-                Deps.Content += item.Name + "---" + item.Cnt + "---" + item.Sum.ToString("0.00") + " UAH" + "\n";
-            }
+            DepartmentsStatList.ItemsSource = queryDeps;
 
             ////////////////////////////////////
 
-            var StatSales = efContext.Products
-                .GroupJoin(
-                    todaySales,
-                    p => p.Id,
-                    s => s.ProductId,
-                    (p, sales) => new
-                    {
-                        Name = p.Name,
-                        Cnt = sales.Count(),
-                        Prc = sales.Join(efContext.Products, sale => sale.ProductId, product => product.Id, (sale, product) => sale.Quantity * product.Price).Sum()
-                    }
-                ).OrderByDescending(g => g.Cnt);
-
-            foreach (var item in StatSales)
-            {
-                LogBlock.Text += $"{item.Name} -- {item.Cnt}  -- {item.Prc.ToString("0.00")} UAH \n";
-            }
-
-            BestProduct.Content = StatSales.First().Name;
         }
         private void AddDepartmentButton_Click(object sender, RoutedEventArgs e)
         {
