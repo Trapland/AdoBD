@@ -70,7 +70,7 @@ namespace AdoBD
             // Повернення - чеки, що є видаленими (кількість чеків за сьогодні)
             DeletedCheckCnt.Content = todaySales.Count(s => s.DeleteDt != null).ToString();
 
-            ///////////////////////////////////////////////////////////////////////////
+            /////////////////////////////////////////////////////////////////////////// Manager - Sales
 
             var queryMan = efContext.Managers
              .GroupJoin(
@@ -94,7 +94,7 @@ namespace AdoBD
                 BestMoneyItems.Content += "\n" + item.Surname + " " + item.Name + "---" + item.Sum.ToString("0.00") + " UAH";
             }
 
-            ///////////////////////////////////////////////
+            /////////////////////////////////////////////// Product - Sales
             
             var StatSales = efContext.Products
                   .GroupJoin(
