@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,7 +26,6 @@ namespace AdoBD
         public EfContext efContext { get; set; } = new();
         private ICollectionView depListView;   // інтерфейс для налагодження View з колекцією
         private static readonly Random random = new();
-
         public EFWindow()
         {
             InitializeComponent();
@@ -54,7 +54,7 @@ namespace AdoBD
         {
             // загальна кількість чеків (записів Sales) за сьогодні
             var todaySales = efContext.Sales.Where(s => s.SaleDt.Date == DateTime.Today);
-             SalesChecks.Content = todaySales.Count().ToString();  // .Count() - запускає запит
+            SalesChecks.Content = todaySales.Count().ToString();  // .Count() - запускає запит
             var allSalesCnt = efContext.Sales;
 
             // загальна кількість проданих товарів (сума Sales.Quantity) за сьогодні
@@ -75,33 +75,34 @@ namespace AdoBD
 
             var queryMan = efContext.Managers
              .GroupJoin(
-             efContext.Sales.Where(s => s.SaleDt.Date == DateTime.Today),
+             todaySales,
              m => m.Id,
              s => s.ManagerId,
              (m, sales) => new
              {
+                 Id = m.IdMainDep,
                  Name = m.Name,
                  Surname = m.Surname,
-                 Cnt = sales.Count() 
+                 Cnt = sales.Count()
              }
-             ).OrderByDescending(g => g.Cnt).Take(3); 
+             ).OrderByDescending(g => g.Cnt);
 
             BestManager.Content = queryMan.First().Surname + " " + queryMan.First().Name;
-            foreach(var item in queryMan)
+            foreach (var item in queryMan)
             {
                 BestManagersItems.Content += "\n" + item.Surname + " " + item.Name + "---" + item.Cnt;
             }
 
             var queryMoney = efContext.Managers
              .GroupJoin(
-             efContext.Sales.Where(s => s.SaleDt.Date == DateTime.Today),
+             todaySales,
              m => m.Id,
              s => s.ManagerId,
              (m, sales) => new
              {
                  Name = m.Name,
                  Surname = m.Surname,
-                 Cnt = sales.Join(efContext.Products,sale => sale.ProductId, product => product.Id,(sale,product) => sale.Quantity * product.Price).Sum()
+                 Cnt = sales.Join(efContext.Products, sale => sale.ProductId, product => product.Id, (sale, product) => sale.Quantity * product.Price).Sum()
              }
              ).OrderByDescending(g => g.Cnt).Take(3);
 
@@ -110,13 +111,47 @@ namespace AdoBD
                 BestMoneyItems.Content += "\n" + item.Surname + " " + item.Name + "---" + item.Cnt.ToString("0.00") + " UAH";
             }
 
+            ///////////////////////////////////////////////
+
+
+            var queryDeps = efContext.Departments.ToList()
+             .GroupJoin(
+             efContext.Managers.GroupJoin(
+             todaySales,
+             m => m.Id,
+             s => s.ManagerId,
+             (m, sales) => new
+             {
+                 IdDep = m.IdMainDep,
+                 Name = m.Name,
+                 Cnt = sales.Count(),
+                 Sum = sales.Join(efContext.Products, sale => sale.ProductId, product => product.Id, (sale, product) => sale.Quantity * product.Price).Sum()
+             }
+             ).OrderByDescending(g => g.Cnt),
+             d => d.Id,
+             man => man.IdDep,
+             (dep, managers) => new
+             {
+                 Name = dep.Name,
+                 Cnt = managers.Sum(m => m.Cnt),
+                 Sum = managers.Sum(m => m.Sum)
+             }
+             ).OrderByDescending(it => it.Cnt);
+
+            foreach (var item in queryDeps)
+            {
+                Deps.Content += item.Name + "---" + item.Cnt + "---" + item.Sum.ToString("0.00") + " UAH" + "\n";
+            }
+
+            ////////////////////////////////////
 
             var StatSales = efContext.Products
                 .GroupJoin(
-                    efContext.Sales.Where(s => s.SaleDt.Date == DateTime.Today),
+                    todaySales,
                     p => p.Id,
                     s => s.ProductId,
-                    (p, sales) => new {
+                    (p, sales) => new
+                    {
                         Name = p.Name,
                         Cnt = sales.Count(),
                         Prc = sales.Join(efContext.Products, sale => sale.ProductId, product => product.Id, (sale, product) => sale.Quantity * product.Price).Sum()

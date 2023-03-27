@@ -115,6 +115,38 @@
             </Grid>
         </StackPanel>
 
+        <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="2">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Label Content="Departments stats" HorizontalAlignment="Center" 
+                       FontSize="22" FontWeight="DemiBold"/>
+            </StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"  x:Name="Deps"/>
+
+            </Grid>
+        </StackPanel>
+
         <TextBlock Grid.Row="1" Grid.Column="1" x:Name="LogBlock"/>
     </Grid>
 </Window>
